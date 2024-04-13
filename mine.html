@@ -3,9 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <title>Monnaie Virtuelle Eraz</title>
+<script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-database.js"></script>
 <script>
-// Liste pour stocker les IDs uniques déjà générés
-let generatedIds = [];
+// Configuration de Firebase (remplacez par vos valeurs)
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCiGsYC4Yg5iSsxmfn--RtBQhPvpfXYC04",
+  authDomain: "mine-eraz.firebaseapp.com",
+  projectId: "mine-eraz",
+  storageBucket: "mine-eraz.appspot.com",
+  messagingSenderId: "596921535961",
+  appId: "1:596921535961:web:c19e36400bca07cfe69dc8",
+  measurementId: "G-WB1TSTVRWR"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
 function isMultipleOf(num, divisor) {
     return num % divisor === 0;
@@ -27,14 +49,15 @@ function handleInput() {
     const input = document.getElementById("userInput").value;
     const id = parseInt(input, 10);
     
-    // Vérifier si l'entrée est un multiple valide et non déjà utilisé
-    if (isMultipleOf(id, 751953751953) && !generatedIds.includes(id)) {
-        generatedIds.push(id); // Enregistrer l'ID
-        generateErazFile(id); // Générer le fichier .eraz
-        alert("Fichier .eraz créé pour l'ID: " + id);
-    } else {
-        alert("L'entrée n'est pas un multiple valide de 751953751953 ou a déjà été utilisée.");
-    }
+    db.ref('ids/' + id).once('value').then((snapshot) => {
+        if (isMultipleOf(id, 751953751953) && !snapshot.exists()) {
+            db.ref('ids/' + id).set(true); // Enregistrer l'ID dans Firebase
+            generateErazFile(id); // Générer le fichier .eraz
+            alert("Fichier .eraz créé pour l'ID: " + id);
+        } else {
+            alert("L'entrée n'est pas un multiple valide de 751953751953 ou a déjà été utilisée.");
+        }
+    });
 }
 </script>
 </head>
@@ -45,4 +68,5 @@ function handleInput() {
 <button onclick="handleInput()">Générer Eraz</button>
 </body>
 </html>
+
 
