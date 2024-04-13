@@ -49,6 +49,7 @@ function handleInput() {
     const input = document.getElementById("userInput").value;
     const id = parseInt(input, 10);
     
+    // Accéder à Firebase pour vérifier si l'ID existe déjà
     db.ref('ids/' + id).once('value').then((snapshot) => {
         if (isMultipleOf(id, 751953751953) && !snapshot.exists()) {
             db.ref('ids/' + id).set(true); // Enregistrer l'ID dans Firebase
