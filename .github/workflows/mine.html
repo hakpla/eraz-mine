@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Monnaie Virtuelle Eraz</title>
+<script>
+// Liste pour stocker les IDs uniques déjà générés
+let generatedIds = [];
+
+function isMultipleOf(num, divisor) {
+    return num % divisor === 0;
+}
+
+function generateErazFile(id) {
+    const fileName = id + ".eraz";
+    const content = "ID de l'Eraz: " + id;
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const downloadLink = document.createElement("a");
+    downloadLink.href = URL.createObjectURL(blob);
+    downloadLink.download = fileName;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+}
+
+function handleInput() {
+    const input = document.getElementById("userInput").value;
+    const id = parseInt(input, 10);
+    
+    // Vérifier si l'entrée est un multiple valide et non déjà utilisé
+    if (isMultipleOf(id, 751953751953) && !generatedIds.includes(id)) {
+        generatedIds.push(id); // Enregistrer l'ID
+        generateErazFile(id); // Générer le fichier .eraz
+        alert("Fichier .eraz créé pour l'ID: " + id);
+    } else {
+        alert("L'entrée n'est pas un multiple valide de 751953751953 ou a déjà été utilisée.");
+    }
+}
+</script>
+</head>
+<body>
+<h1>Monnaie Virtuelle Eraz</h1>
+<label for="userInput">Entrez un nombre pour générer un Eraz:</label>
+<input type="number" id="userInput">
+<button onclick="handleInput()">Générer Eraz</button>
+</body>
+</html>
